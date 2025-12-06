@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'posts',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -91,10 +92,18 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
 }
+
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+}
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
