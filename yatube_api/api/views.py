@@ -1,16 +1,12 @@
-from rest_framework import viewsets, mixins, permissions, filters
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from posts.models import Post, Group, Comment, Follow
-from .serializers import (
-    PostSerializer,
-    GroupSerializer,
-    CommentSerializer,
-    FollowSerializer,
-)
+from posts.models import Comment, Follow, Group, Post
+from rest_framework import filters, mixins, permissions, viewsets
 
 # Permission для авторов
 from .permissions import IsAuthorOrReadOnly
+from .serializers import (CommentSerializer, FollowSerializer, GroupSerializer,
+                          PostSerializer)
 
 # Посты
 
