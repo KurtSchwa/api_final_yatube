@@ -9,42 +9,42 @@ User = get_user_model()
 
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
-        slug_field='username',
+        slug_field="username",
         read_only=True
     )
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = "__all__"
 
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
-        slug_field='username',
+        slug_field="username",
         read_only=True
     )
 
     class Meta:
         model = Comment
-        fields = '__all__'
-        read_only_fields = ('post', 'author')
+        fields = "__all__"
+        read_only_fields = ("post", "author")
 
 
 class FollowSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
-        default=serializers.CurrentUserDefault()
+        default=serializers.CurrentUserDefault(),
     )
     following = serializers.SlugRelatedField(
         slug_field='username',
-        queryset=User.objects.all()
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -53,14 +53,15 @@ class FollowSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
-                fields=('user', 'following')
+                fields=('user', 'following'),
             )
         ]
 
-    def validate(self, data):
-        request_user = self.context['request'].user
-        if request_user == data['following']:
+    def validate_following(self, value):
+        """Запрещает подписку на самого себя."""
+        user = self.context['request'].user
+        if user == value:
             raise serializers.ValidationError(
                 'Нельзя подписаться на самого себя.'
             )
-        return data
+        return value
